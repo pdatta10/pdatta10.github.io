@@ -27,7 +27,7 @@ $(document).ready(function() {
 
 
 	// Call the functions 
-	magnifPopup();
+	// magnifPopup();
 	magnifVideo();
 
 });

@@ -245,6 +245,14 @@
 
 	};
 
+	var clickContact = function() {
+		$('.contact-button').click(function(event) {
+			$('html, body').animate({
+				scrollTop: $('div[data-section="contact"]').offset().top - topVal
+			}, 500, 'easeInOutExpo');
+		})
+	}
+
 	// Reflect scrolling in navigation
 	var navActive = function(section) {
 		
@@ -252,6 +260,47 @@
 		$('.fh5co-main-nav, #fh5co-offcanvas').find('a[data-nav-section="'+section+'"]').addClass('active');
 		
 	};
+
+	var handleSubmission = function() {
+		$('#contact-form').submit(function(e) {
+			e.preventDefault();
+			var $inputs = $('#contact-form :input');
+			
+			var formValid = true;
+			$inputs.each(function() {
+				if (!$(this).val().trim()) {
+					formValid = false;
+				}
+			});
+
+			if (!formValid) {
+				swal('Please fill out all fields before submitting', '', 'error');
+				return false;
+			}
+
+			var formData = objectifyForm($(this).serializeArray());
+			$.ajax({
+				url: "https://formspree.io/xplzgvvx", 
+				method: "POST",
+				data: formData,
+				dataType: "json"
+			}).done(function() {
+				swal('Successfully submitted', 'Thanks for sending a message, we will be in touch shortly!', 'success');
+				$('#contact-form')[0].reset();
+			}).fail(function() {
+				swal('Error submitting', 'We were unable to receive your message, please try again or reach out to Prabir on LinkedIn', 'error');
+			});
+		});
+	}
+
+	function objectifyForm(formArray) { //serialize data function
+
+		var returnArray = {};
+		for (var i = 0; i < formArray.length; i++){
+		  returnArray[formArray[i]['name']] = formArray[i]['value'];
+		}
+		return returnArray;
+	  }
 
 	var navigationSection = function() {
 
@@ -297,6 +346,8 @@
 		scrolledWindow();
 		mobileMenuOutsideClick();
 		clickMenu();
+		clickContact();
+		handleSubmission();
 		navigationSection();
 		goToTop();
 
